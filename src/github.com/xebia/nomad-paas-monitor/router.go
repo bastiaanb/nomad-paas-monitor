@@ -23,6 +23,12 @@ var routes = Routes{
     EnvironmentHandler,
   },
 	Route{
+    "Peers",
+    "GET",
+    "/peers",
+    PeersHandler,
+  },
+	Route{
     "ID",
     "GET",
     "/id",

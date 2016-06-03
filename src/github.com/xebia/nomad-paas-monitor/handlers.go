@@ -11,6 +11,8 @@ import (
 
 var (
   messages = []Message{}
+  peers = []Peer{}
+  consulAddress = os.Getenv("CONSUL_ADDR")
 )
 
 // Show the environment variables.
@@ -41,6 +43,13 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
 
   json.NewEncoder(w).Encode("ok")
+}
+
+// List known peers.
+func PeersHandler(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", "application/json")
+
+  json.NewEncoder(w).Encode(peers)
 }
 
 // Handle incoming messages.
