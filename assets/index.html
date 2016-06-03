@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="/js/jquery.js"></script>
+    <script src="/js/react.js"></script>
+    <script src="/js/react-dom.js"></script>
+    <script src="/js/browser.min.js"></script>
+    <title>PAAS Monitor</title>
+  </head>
+  <body>
+    <div id="messages"></div>
+    <script type="text/babel">
+      var UptimeCounter = React.createClass({
+        render: function() {
+          var elapsed = Math.round((new Date().getTime() - this.props.startTime) / 100);
+          var uptime = elapsed / 10 + (elapsed % 10 ? '' : '.0' );
+
+          return (
+            <div>Uptime: {uptime}</div>
+          )
+        }
+      });
+
+      var Message = React.createClass({
+        render: function() {
+          var message = this.props.message;
+          return (
+            <li>
+              [{message.id}]{message.author}: {message.message}
+            </li>
+          )
+        }
+      });
+
+      var MessageList = React.createClass({
+        render: function() {
+          var messages = this.props.messages;
+          return (
+            <ul>
+            {messages.map(function(message) {
+              return <Message key={message.id} message={message}/>
+            })}
+            </ul>
+          )
+        }
+      });
+
+      var PaasMonitor = React.createClass({
+        getInitialState: function() {
+          return {
+            messages: []
+          };
+        },
+        componentWillUnmount: function() {
+          this.serverRequest.abort();
+        },
+        render: function() {
+          this.serverRequest = $.get("/messages", function (result) {
+            this.setState({
+              messages: result
+            });
+          }.bind(this));
+          return (
+            <div>
+              <UptimeCounter startTime={this.props.startTime}/>
+              <MessageList messages={this.state.messages}/>
+            </div>
+          )
+        }
+      });
+
+      // var ExampleApplication = React.createClass({
+      //   render: function() {
+
+      //     var message = 'React has been successfully running for ' + seconds + ' seconds.';
+      //     return <p>{message}</p>;
+      //   }
+      // });
+
+      var startTime = new Date().getTime();
+      setInterval(function() {
+        ReactDOM.render(
+          <PaasMonitor startTime={startTime}/>,
+          document.getElementById('messages')
+        );
+      }, 1000);
+    </script>
+  </body>
+</html>
