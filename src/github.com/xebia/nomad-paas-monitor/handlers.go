@@ -41,14 +41,12 @@ func IDHandler(w http.ResponseWriter, r *http.Request) {
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
   w.WriteHeader(http.StatusOK)
   w.Header().Set("Content-Type", "application/json")
-
   json.NewEncoder(w).Encode("ok")
 }
 
 // List known peers.
 func PeersHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-
   json.NewEncoder(w).Encode(peers)
 }
 
@@ -71,7 +69,6 @@ func AddMessageHandler(w http.ResponseWriter, r *http.Request) {
 // List received messages.
 func ListMessagesHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-
   json.NewEncoder(w).Encode(messages)
 }
 

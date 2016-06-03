@@ -21,7 +21,7 @@ var Uptime = React.createClass({
     return (
       <div id="uptime">
         <h2>Uptime</h2>
-        <p>{uptime}</p>
+      <p>{uptime}s</p>
       </div>
     )
   }
@@ -47,7 +47,7 @@ var MessageList = React.createClass({
     var messages = this.props.messages;
     return (
       <div id="messages">
-        <h2>Messages ({messages.length})</h2>
+        <h2>Messages</h2>
         <ul>
         {messages.map(function(message) {
           return <Message key={message.id} message={message}/>
@@ -136,7 +136,7 @@ var PaasMonitor = React.createClass({
     return {
       alive: true,
       identifier: "",
-      messages: [],
+      // messages: [],
       peers: [],
       environment: {}
     };
@@ -167,7 +167,7 @@ var PaasMonitor = React.createClass({
 
   componentWillUnmount: function() {
     this.idRequest.abort();
-    this.messagesRequest.abort();
+    // this.messagesRequest.abort();
     this.peersRequest.abort();
     this.environmentRequest.abort();
   },
@@ -181,26 +181,19 @@ var PaasMonitor = React.createClass({
 
   render: function() {
     if (this.state.alive) {
-      // Fetch messages
-      this.messagesRequest = $.get("/messages", function (result) {
-        this.setState({
-          messages: result
-        });
-      }.bind(this), "json");
-
       return (
         <div>
           <Identifier identifier={this.state.identifier}/>
           <Uptime start={this.props.start}/>
           <PeerList peers={this.state.peers}/>
-          <MessageList messages={this.state.messages}/>
+        <MessageList messages={this.props.messages}/>
           <Environment variables={this.state.environment}/>
           <KillButton onClick={this.kill}/>
         </div>
       )
     } else {
       return (
-        <div>I died :(</div>
+        <div id="dead">I died :(</div>
       )
     }
   }
@@ -210,9 +203,17 @@ var PaasMonitor = React.createClass({
  * Entrypoint
  */
 var start = new Date().getTime();
+var messages = [];
 setInterval(function() {
+  if(!document.getElementById('dead')) {
+    // Fetch messages
+    $.get("/messages", function (result) {
+      messages = result;
+    }, "json");
+  }
+
   ReactDOM.render(
-    <PaasMonitor start={start}/>,
+    <PaasMonitor messages={messages} start={start}/>,
     document.getElementById('paasmonitor')
   );
-}, 1000);
+}, 250);
