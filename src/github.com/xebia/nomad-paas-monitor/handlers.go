@@ -7,11 +7,12 @@ import (
   "strings"
   "io"
   "io/ioutil"
+  "time"
 )
 
 var (
+  start = time.Now().UTC().UnixNano()/1000000
   messages = []Message{}
-  peers = []Peer{}
   consulAddress = os.Getenv("CONSUL_ADDR")
 )
 
@@ -44,10 +45,10 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode("ok")
 }
 
-// List known peers.
-func PeersHandler(w http.ResponseWriter, r *http.Request) {
+// The time the PAAS Monitor started.
+func UptimeHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
-  json.NewEncoder(w).Encode(peers)
+  json.NewEncoder(w).Encode(start)
 }
 
 // Handle incoming messages.

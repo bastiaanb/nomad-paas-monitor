@@ -23,12 +23,6 @@ var routes = Routes{
     EnvironmentHandler,
   },
 	Route{
-    "Peers",
-    "GET",
-    "/peers",
-    PeersHandler,
-  },
-	Route{
     "ID",
     "GET",
     "/id",
@@ -39,6 +33,12 @@ var routes = Routes{
     "GET",
     "/health",
     HealthHandler,
+  },
+	Route{
+    "Uptime",
+    "GET",
+    "/uptime",
+    UptimeHandler,
   },
   Route{
     "Message",
