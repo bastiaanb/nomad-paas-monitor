@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
   "os"
@@ -57,12 +58,17 @@ func AddMessageHandler(w http.ResponseWriter, r *http.Request) {
 
   var message Message
   body, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	body = bytes.TrimPrefix(body, []byte("\xef\xbb\xbf"))
   if err := json.Unmarshal(body, &message); err != nil {
     w.WriteHeader(http.StatusInternalServerError)
     json.NewEncoder(w).Encode(err.Error())
   } else {
     w.WriteHeader(http.StatusCreated)
     messages = append(messages, message)
+
+		if len(messages) > 5 {
+			messages = messages[1:]
+		}
     json.NewEncoder(w).Encode("pong")
   }
 }
