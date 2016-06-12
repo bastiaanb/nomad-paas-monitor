@@ -21,7 +21,7 @@ job "paas-monitor" {
 
 			driver = "docker"
 			config {
-				image = "eveld/nomad-paas-monitor:0.1.2"
+				image = "eveld/nomad-paas-monitor:0.3.0"
 				port_map {
 					http = 80
 				}

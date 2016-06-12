@@ -40,12 +40,6 @@ var routes = Routes{
     "/uptime",
     UptimeHandler,
   },
-	Route{
-    "Send Message",
-    "POST",
-    "/send",
-    SendMessageHandler,
-  },
   Route{
     "Message",
     "POST",
