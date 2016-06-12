@@ -491,7 +491,7 @@ setInterval(function() {
 var id = 0;
 setInterval(function() {
   if(!document.getElementById('dead')) {
-    $.post("http://paas-monitor.service.consul/messages", JSON.stringify({
+    $.post("/send", JSON.stringify({
       id: "" + id++,
       timestamp: new Date().getTime(),
       author: identifier,

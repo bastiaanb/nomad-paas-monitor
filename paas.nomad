@@ -1,6 +1,8 @@
 job "paas-monitor" {
-	datacenters = ["dc1"]
+	datacenters = ["europe-west1-b", "europe-west1-c", "europe-west1-d"]
 	group "paas-monitor" {
+		count = 3
+
 		task "paas-monitor" {
 			env {
 				NODE_UNIQUE_ID = "${node.unique.id}"
@@ -19,11 +21,24 @@ job "paas-monitor" {
 
 			driver = "docker"
 			config {
-				image = "eveld/nomad-paas-monitor:0.0.4"
+				image = "eveld/nomad-paas-monitor:0.1.2"
 				port_map {
 					http = 80
 				}
 			}
+
+			service {
+				name = "paas-monitor"
+				tags = ["http"]
+				port = "http"
+				check {
+					name = "alive"
+					type = "tcp"
+					interval = "10s"
+					timeout = "2s"
+				}
+			}
+
 			resources {
 				cpu = 500
 				memory = 256

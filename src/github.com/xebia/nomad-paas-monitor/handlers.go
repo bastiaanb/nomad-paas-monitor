@@ -52,6 +52,24 @@ func UptimeHandler(w http.ResponseWriter, r *http.Request) {
   json.NewEncoder(w).Encode(start)
 }
 
+func SendMessageHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	// var message Message
+  body, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	req, err := http.NewRequest("POST", "http://paas-monitor.service.consul/messages", bytes.NewBuffer(body))
+
+  client := &http.Client{}
+  resp, err := client.Do(req)
+  if err != nil {
+      panic(err)
+  }
+  defer resp.Body.Close()
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("ok")
+}
+
 // Handle incoming messages.
 func AddMessageHandler(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
