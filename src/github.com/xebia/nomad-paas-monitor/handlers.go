@@ -58,7 +58,6 @@ func AddMessageHandler(w http.ResponseWriter, r *http.Request) {
 
   var message Message
   body, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	body = bytes.TrimPrefix(body, []byte("\xef\xbb\xbf"))
   if err := json.Unmarshal(body, &message); err != nil {
     w.WriteHeader(http.StatusInternalServerError)
     json.NewEncoder(w).Encode(err.Error())
